@@ -76,7 +76,7 @@ function loadAssignmentData() {
 }
 
 function addClient(event) {
-    event.preventDefault(); // Prevent the default form submission
+    event.preventDefault();
 
     const clientForm = document.getElementById('clientForm');
     const formData = new FormData(clientForm);
@@ -101,7 +101,7 @@ function addClient(event) {
 }
 
 function addContract(event) {
-    event.preventDefault(); // Prevent the default form submission
+    event.preventDefault(); 
 
     const contractForm = document.getElementById('contractForm');
     const formData = new FormData(contractForm);

@@ -1,4 +1,6 @@
-
+document.addEventListener('DOMContentLoaded', function() {
+    loadPayrollHistory();
+});
 document.getElementById('confirmButton').addEventListener('click', function() {
     const personnelId = document.getElementById('personnelIdInputEarnings').value;
     const salary = document.getElementById('salaryInput').value;
@@ -137,7 +139,7 @@ document.getElementById('saveButton').addEventListener('click', function() {
         dateEnd: new Date(new Date().setDate(new Date().getDate() + 15)).toISOString().split('T')[0]
     };
 
-    fetch('http://127.0.0.1:5000/api/savePayroll', { // Ensure the URL matches the server's URL and port
+    fetch('http://127.0.0.1:5000/api/savePayroll', { 
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -164,3 +166,27 @@ document.getElementById('searchPersonnelButton').addEventListener('click', funct
         })
         .catch(error => console.error('Error fetching personnel account numbers:', error));
 });
+
+function loadPayrollHistory() {
+    fetch('http://localhost:5000/getPayrollHistory')
+        .then(response => response.json())
+        .then(data => {
+            const payrollHistoryData = document.getElementById('personnelData');
+            payrollHistoryData.innerHTML = '';
+            data.forEach(payroll => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${payroll.Personnel_ID}</td>
+                    <td>${payroll.Salary_ID}</td>
+                    <td>${payroll.Total_Gross !== null ? payroll.Total_Gross : 'N/A'}</td>
+                    <td>${payroll.Total_Deductions !== null ? payroll.Total_Deductions : 'N/A'}</td>
+                    <td>${payroll.NetGross !== null ? payroll.NetGross : 'N/A'}</td>
+                `;
+                payrollHistoryData.appendChild(row);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching payroll history data:', error);
+        });
+}
+

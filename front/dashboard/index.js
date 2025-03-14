@@ -2,9 +2,9 @@ app.get('/getCounts', (req, res) => {
     pool.getConnection()
         .then(conn => {
             const queries = [
-                'SELECT COUNT(*) AS activePersonnel FROM personnel WHERE Assignment_ID IS NOT NULL', // Active personnel have an Assignment_ID
-                'SELECT COUNT(*) AS inactivePersonnel FROM personnel WHERE Assignment_ID IS NULL', // Inactive personnel do not have an Assignment_ID
-                'SELECT COUNT(*) AS availableContracts FROM contract WHERE Status_ID = 1' // Assuming Status_ID 1 is for active contracts
+                'SELECT COUNT(*) AS activePersonnel FROM personnel WHERE Assignment_ID IS NOT NULL', 
+                'SELECT COUNT(*) AS inactivePersonnel FROM personnel WHERE Assignment_ID IS NULL', 
+                'SELECT COUNT(*) AS availableContracts FROM contract WHERE Status_ID = 1' 
             ];
 
             Promise.all(queries.map(query => conn.query(query)))

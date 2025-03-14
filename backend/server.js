@@ -153,8 +153,27 @@ app.get('/getClients', (req, res) => {
             console.error('Database connection failed:', err);
         });
 });
+app.get('/getPayrollHistory', (req, res) => {
+    pool.getConnection()
+        .then(conn => {
+            conn.query('SELECT * FROM salary')
+                .then(rows => {
+                    res.json(rows);
+                    conn.release();
+                })
+                .catch(err => {
+                    res.status(500).send('Error fetching payroll history data');
+                    console.error('Error fetching payroll history data:', err);
+                    conn.release();
+                });
+        })
+        .catch(err => {
+            res.status(500).send('Database connection failed');
+            console.error('Database connection failed:', err);
+        });
+});
 
-// Route to get contract data
+
 app.get('/getContracts', (req, res) => {
     pool.getConnection()
         .then(conn => {
@@ -175,7 +194,7 @@ app.get('/getContracts', (req, res) => {
         });
 });
 
-// Route to get assignment data
+
 app.get('/getAssignments', (req, res) => {
     pool.getConnection()
         .then(conn => {
@@ -396,6 +415,7 @@ app.get('/api/getPersonnelSalaryAndDeductions', (req, res) => {
             console.error('Database connection failed:', err);
         });
 });
+
 
 // Route to save payroll data
 app.post('/api/savePayroll', (req, res) => {
