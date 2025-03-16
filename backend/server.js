@@ -177,7 +177,7 @@ app.get('/getPayrollHistory', (req, res) => {
 app.get('/getContracts', (req, res) => {
     pool.getConnection()
         .then(conn => {
-            conn.query('SELECT c.Contract_ID, cl.ClientName AS Client, c.StartDate, c.EndDate, p.Type AS PaymentMode, s.StatusName AS Status, c.ContractValue FROM contract c JOIN client cl ON c.Client_ID = cl.Client_ID JOIN paymenttype p ON c.PaymentType_ID = p.PaymentType_ID JOIN status s ON c.Status_ID = s.Status_ID')
+            conn.query('SELECT c.Contract_ID, cl.ClientName AS Client, c.StartDate, c.EndDate, p.Type AS PaymentMode, s.StatusName AS Status, c.ContractValue FROM contract c JOIN client cl ON c.Client_ID = cl.Client_I JOIN paymenttype p ON c.PaymentType_ID = p.PaymentType_ID JOIN status s ON c.Status_ID = s.Status_ID')
                 .then(rows => {
                     res.json(rows);
                     conn.release();
@@ -318,7 +318,36 @@ app.post('/addContract', (req, res) => {
 });
 
 // Route to get counts for dashboard
+app.get('/getCounts', (req, res) => {
+    pool.getConnection()
+        .then(conn => {
+            const queries = [
+                'SELECT COUNT(*) AS activePersonnel FROM personnel WHERE Assignment_ID IS NOT NULL', 
+                'SELECT COUNT(*) AS inactivePersonnel FROM personnel WHERE Assignment_ID IS NULL', 
+                'SELECT COUNT(*) AS availableContracts FROM contract WHERE Status_ID = 1' 
+            ];
 
+            Promise.all(queries.map(query => conn.query(query)))
+                .then(results => {
+                    const counts = {
+                        activePersonnel: results[0][0].activePersonnel,
+                        inactivePersonnel: results[1][0].inactivePersonnel,
+                        availableContracts: results[2][0].availableContracts
+                    };
+                    res.json(counts);
+                    conn.release();
+                })
+                .catch(err => {
+                    res.status(500).send('Error fetching counts');
+                    console.error('Error fetching counts:', err);
+                    conn.release();
+                });
+        })
+        .catch(err => {
+            res.status(500).send('Database connection failed');
+            console.error('Database connection failed:', err);
+        });
+});
 
 // Route to get personnel data by ID
 app.get('/api/getPersonnelData', (req, res) => {
@@ -344,11 +373,11 @@ app.get('/api/getPersonnelData', (req, res) => {
 });
 
 
-app.post('/api/addPayslip', (req, res) => {
+app.post('/addPayslip', (req, res) => {
     const { personnelId, salary, bonus, allowance, deduction1, deduction2, deduction3, sssAccountNumber, pagibigAccountNumber, philhealthAccountNumber } = req.body;
 
     pool.getConnection()
-        .then(conn => {
+        .then(conn => { 
             conn.beginTransaction()
                 .then(() => {
                     // Insert into personnelsalary table
@@ -443,6 +472,33 @@ app.post('/api/savePayroll', (req, res) => {
                             console.error('Error saving payroll:', err);
                             conn.release();
                         });
+                });
+        })
+        .catch(err => {
+            res.status(500).send('Database connection failed');
+            console.error('Database connection failed:', err);
+        });
+});
+
+// Route to handle login
+app.post('/login', (req, res) => {
+    const { username, password } = req.body;
+
+    pool.getConnection()
+        .then(conn => {
+            conn.query('SELECT * FROM login WHERE username = ? AND password = ?', [username, password])
+                .then(rows => {
+                    if (rows.length > 0) {
+                        res.json({ success: true, message: 'Login successful' });
+                    } else {
+                        res.json({ success: false, message: 'Invalid username or password' });
+                    }
+                    conn.release();
+                })
+                .catch(err => {
+                    res.status(500).send('Error checking login credentials');
+                    console.error('Error checking login credentials:', err);
+                    conn.release();
                 });
         })
         .catch(err => {
