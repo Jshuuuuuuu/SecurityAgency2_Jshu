@@ -41,3 +41,19 @@ document.addEventListener('DOMContentLoaded', () => {
 		});
 	});
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const loginLink = document.querySelector('a[href="login.html"]');
+    
+    if (loginLink) {
+        loginLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            const formContainer = document.querySelector('.form-container');
+            formContainer.classList.add('slide-out');
+            
+            setTimeout(function() {
+                window.location.href = 'login.html';
+            }, 400);
+        });
+    }
+});
