@@ -205,10 +205,12 @@
             </pma:table>
             <pma:table name="salary">
                 CREATE TABLE `salary` (
-                  `Salary_ID` int(11) NOT NULL AUTO_INCREMENT,
+                  `Salary_ID` int(11) NOT NULL 
+                  `Status_ID` int(11) NOT NULL AUTO_INCREMENT,
+                  `StatusName` varchar(50) DEFAAUTO_INCREMENT,
                   `Personnel_ID` int(11) DEFAULT NULL,
                   `Total_Deductions` int(11) DEFAULT NULL,
-                  `Total_Gross` int(11) DEFAULT NULL,
+                  `Total_Gross` int(11) DEFAULT NULL,AssignmentEnd` date DEFAULT NULL,
                   `NetGross` int(11) DEFAULT NULL,
                   PRIMARY KEY (`Salary_ID`),
                   KEY `Personnel_ID` (`Personnel_ID`),
@@ -273,7 +275,7 @@
             <column name="Province">Mindanao</column>
             <column name="Postal_Code">8000</column>
         </table>
-        <table name="address">
+        <table name="address">AssignmentEnd` date DEFAULT NULL,
             <column name="Address_ID">125</column>
             <column name="Street">123 Mabini Street</column>
             <column name="Barangay">CABANTIAN</column>
@@ -300,7 +302,7 @@
         <table name="address">
             <column name="Address_ID">128</column>
             <column name="Street">143 Mabini Street</column>
-            <column name="Barangay">Barangay San France</column>
+            <column name="Barangay">Barangay San France</columnAssignmentEnd` date DEFAULT NULL,>
             <column name="City">Quezon City</column>
             <column name="Province">Metro Manila</column>
             <column name="Postal_Code">1104</column>
@@ -682,7 +684,7 @@
         </table>
         <table name="personnel">
             <column name="Personnel_ID">44</column>
-            <column name="Personnel_Name">ABEGAIL ANGSUANGCO MACAPUGAY</column>
+            <column name="Personnel_Name">ABEGAIL ANGSUANGCO MAssignmentEnd` date DEFAULT NULL,ACAPUGAY</column>
             <column name="Personnel_Age">34</column>
             <column name="CivilStatus_ID">1</column>
             <column name="Gender_ID">2</column>
