@@ -17,19 +17,30 @@
   }
   
   .image-section {
-    flex: 1;
-    background-color: #e0e0e0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-  }
-  
-  .image-section img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+  flex: 1;
+  background-color: #e0e0e0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden; /* Prevents image overflow */
+}
+
+.image-section img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Covers the area while maintaining aspect ratio */
+  object-position: center; /* Centers the image */
+  image-rendering: -webkit-optimize-contrast; /* Better quality on webkit browsers */
+  image-rendering: crisp-edges; /* Maintains sharpness */
+}
+
+/* Alternative: If you want to contain the entire image without cropping */
+.image-section img.contain {
+  object-fit: contain; /* Shows entire image, may have letterboxing */
+  max-width: 100%;
+  max-height: 100%;
+}
   
   .form-section {
     width: 40%;
@@ -46,9 +57,36 @@
     background-color: #e0e0e0;
     padding: 30px;
     border-radius: 4px;
+    animation: slideIn 0.5s ease-out;
   }
   
-  .login-form {
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  .form-container.slide-out {
+    animation: slideOut 0.4s ease-in forwards;
+  }
+  
+  @keyframes slideOut {
+    from {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+  }
+  
+  .login-form, .register-form {
     width: 100%;
   }
   
@@ -60,7 +98,9 @@
   .form-group:last-child {
     margin-bottom: 0;
     display: flex;
+    gap: 10px;
     justify-content: center;
+    flex-wrap: wrap;
   }
   
   label {
@@ -76,6 +116,13 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 14px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  input:focus {
+    outline: none;
+    border-color: #455464;
+    box-shadow: 0 0 5px rgba(69, 84, 100, 0.3);
   }
   
   .bn632-hover {
@@ -90,11 +137,20 @@
     background-size: 300% 100%;
     border-radius: 50px;
     transition: all 0.4s ease-in-out;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
   
   .bn632-hover:hover {
     background-position: 100% 0;
-    transition: all 0.4s ease-in-out;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px 0 rgba(45, 54, 65, 0.85);
+  }
+  
+  .bn632-hover:active {
+    transform: translateY(0);
   }
   
   .bn632-hover:focus {
@@ -150,5 +206,10 @@
     
     .form-container {
       padding: 20px;
+    }
+    
+    .bn632-hover {
+      width: 120px;
+      font-size: 13px;
     }
   }

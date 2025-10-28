@@ -29,3 +29,19 @@ document.querySelector('.login-form').addEventListener('submit', function(event)
         console.error('Error during login:', error);
     });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const registerLink = document.querySelector('a[href="register.html"]');
+    
+    if (registerLink) {
+        registerLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            const formContainer = document.querySelector('.form-container');
+            formContainer.classList.add('slide-out');
+            
+            setTimeout(function() {
+                window.location.href = 'register.html';
+            }, 400);
+        });
+    }
+});
